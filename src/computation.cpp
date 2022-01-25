@@ -39,6 +39,17 @@ void Computation::initialize(int argc, char *argv[])
     // initialize output writer
     outputWriterParaview_ = std::make_unique<OutputWriterParaview>(discretization_);
     outputWriterText_     = std::make_unique<OutputWriterText>(discretization_);
+
+    // set initial obstacle flags
+     for (int j = 5; j < 10; j++)
+     {
+       for (int i = 5; i < 10; i++)
+       {
+           discretization_->isObstacleCell(i,j) = 1;
+       }
+     }
+
+    // set obstacle neighbour flags
 }
 
 void Computation::runSimulation()

@@ -15,6 +15,8 @@ public:
     //! get number of cells in each coordinate direction
     const std::array<int, 2> nCells() const;
 
+    void setObstacleNeighbourFlags();
+
     //! get a reference to field variable u 
     const FieldVariable& u() const;
     //! get a reference to field variable u 
@@ -41,6 +43,44 @@ public:
     double& f(int i, int j);
     //! access value of rhs in element (i,j), access value of p in element (x,y)
     double& g(int i, int j);
+
+
+    //  - obstacle flags - 
+    //! value if cell is an obstacle cell: 1 if obstacle, 0 else
+    const FieldVariable& isObstacleCell() const;
+    //! access value in element (i,j), get const value in element (x,y)
+    double isObstacleCell(int i, int j) const;
+    //! access value in element (x,y) 
+    double& isObstacleCell(int i, int j);
+
+    //! value if obstacle(!) cell if left neighbour is fluid: 1 if true, else 0. Only definded for obstacles 
+    const FieldVariable& hasFluidNeighbourLeft() const;
+    //! access value in element (i,j), get const value in element (x,y)
+    double hasFluidNeighbourLeft(int i, int j) const;
+    //! access value in element (x,y) 
+    double& hasFluidNeighbourLeft(int i, int j);
+
+    //! value if obstacle(!) cell if right neighbour is fluid: 1 if true, else 0. Only definded for obstacles 
+    const FieldVariable& hasFluidNeighbourRight() const;
+    //! access value in element (i,j), get const value in element (x,y)
+    double hasFluidNeighbourRight(int i, int j) const;
+    //! access value in element (x,y) 
+    double& hasFluidNeighbourRight(int i, int j);
+
+    //! value if obstacle(!) cell if top neighbour is fluid: 1 if true, else 0. Only definded for obstacles 
+    const FieldVariable& hasFluidNeighbourTop() const;
+    //! access value in element (i,j), get const value in element (x,y)
+    double hasFluidNeighbourTop(int i, int j) const;
+    //! access value in element (x,y) 
+    double& hasFluidNeighbourTop(int i, int j);
+
+    //! value if obstacle(!) cell if bottom neighbour is fluid: 1 if true, else 0. Only definded for obstacles 
+    const FieldVariable& hasFluidNeighbourBottom() const;
+    //! access value in element (i,j), get const value in element (x,y)
+    double hasFluidNeighbourBottom(int i, int j) const;
+    //! access value in element (x,y) 
+    double& hasFluidNeighbourBottom(int i, int j);
+
 
     //! get the mesh width in x-direction, δx
     double dx() const;
@@ -83,4 +123,13 @@ protected:
     FieldVariable rhs_;
     FieldVariable f_;
     FieldVariable g_;
+
+    //! obstacle flags
+    FieldVariable isObstacleCell_;
+    
+    FieldVariable hasFluidNeighbourLeft_;
+    FieldVariable hasFluidNeighbourRight_;
+    FieldVariable hasFluidNeighbourTop_;
+    FieldVariable hasFluidNeighbourBottom_;
+
 };

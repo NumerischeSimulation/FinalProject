@@ -46,3 +46,8 @@ double Array2D::operator()(int x, int y) const
 
   return data_[index];
 }
+
+void Array2D::setToZero()
+{
+  data_.resize(size_[0]*size_[1], 0.0); 
+}

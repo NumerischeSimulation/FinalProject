@@ -7,11 +7,56 @@ StaggeredGrid::StaggeredGrid(std::array<int,2> nCells, std::array<double,2> mesh
   f_({nCells[0] + 1, nCells[1] + 2},   {0.,      meshWidth[1]/2.}, meshWidth),
   g_({nCells[0] + 2, nCells[1] + 1},   {meshWidth[0]/2.,   0.},    meshWidth),
   rhs_({nCells[0] + 2, nCells[1] + 2}, {meshWidth[0]/2.,   meshWidth[1]/2.}, meshWidth),
+  isObstacleCell_({nCells[0] + 2, nCells[1] + 2},   {meshWidth[0]/2.,   meshWidth[1]/2.}, meshWidth),
+  hasFluidNeighbourLeft_({nCells[0] + 2, nCells[1] + 2},   {meshWidth[0]/2.,   meshWidth[1]/2.}, meshWidth),
+  hasFluidNeighbourRight_({nCells[0] + 2, nCells[1] + 2},   {meshWidth[0]/2.,   meshWidth[1]/2.}, meshWidth),
+  hasFluidNeighbourTop_({nCells[0] + 2, nCells[1] + 2},   {meshWidth[0]/2.,   meshWidth[1]/2.}, meshWidth),
+  hasFluidNeighbourBottom_({nCells[0] + 2, nCells[1] + 2},   {meshWidth[0]/2.,   meshWidth[1]/2.}, meshWidth),
   meshWidth_(meshWidth),
   nCells_(nCells)
 {
-
+    // init with zeros/false
+    isObstacleCell_.setToZero();
+    hasFluidNeighbourLeft_.setToZero();
+    hasFluidNeighbourRight_.setToZero();
+    hasFluidNeighbourTop_.setToZero();
+    hasFluidNeighbourBottom_.setToZero();
 }
+
+void StaggeredGrid::setObstacleNeighbourFlags() 
+{
+    for ( int i = 0; i < nCells_[0]; i++)
+    { 
+        for (int j = 0; j < nCells_[1]; j++)
+        {
+            if (isObstacleCell(i,j)==1)
+            {
+                // left neighbour
+                if (isObstacleCell(i-1,j)==1)
+                {
+                    hasFluidNeighbourLeft_(i,j)=1;
+                }
+                // right neighbour
+                if (isObstacleCell(i+1,j)==1)
+                {
+                    hasFluidNeighbourRight_(i,j)=1;
+                }
+                // top neighbour
+                if (isObstacleCell(i,j+1)==1)
+                {
+                    hasFluidNeighbourTop_(i,j)=1;
+                }
+                // bottom neighbour
+                if (isObstacleCell(i,j-1)==1)
+                {
+                    hasFluidNeighbourBottom_(i,j)=1;
+                }
+            }
+            
+        }
+    }
+}
+
 
 // getter for parameters
 const std::array<double,2> StaggeredGrid::meshWidth() const
@@ -39,6 +84,33 @@ const FieldVariable& StaggeredGrid::p() const
 {
     return p_;
 }
+
+// obstacle flags
+const FieldVariable& StaggeredGrid::isObstacleCell() const
+{
+    return isObstacleCell_;
+}
+
+const FieldVariable& StaggeredGrid::hasFluidNeighbourLeft() const
+{
+    return hasFluidNeighbourLeft_;
+}
+
+const FieldVariable& StaggeredGrid::hasFluidNeighbourRight() const
+{
+    return hasFluidNeighbourRight_;
+}
+
+const FieldVariable& StaggeredGrid::hasFluidNeighbourTop() const
+{
+    return hasFluidNeighbourTop_;
+}
+
+const FieldVariable& StaggeredGrid::hasFluidNeighbourBottom() const
+{
+    return hasFluidNeighbourBottom_;
+}
+
 
 // mesh width
 double StaggeredGrid::dx() const
@@ -307,4 +379,41 @@ double& StaggeredGrid::g(int i, int j)
     int x = i +1;
     int y = j +1;
     return g_(x,y);
+}
+
+double& StaggeredGrid::isObstacleCell(int i, int j)
+{
+    // transform to x, y
+    int x = i +1;
+    int y = j +1;
+    return isObstacleCell_(x,y);
+}
+
+double& StaggeredGrid::hasFluidNeighbourLeft(int i, int j)
+{
+    // transform to x, y
+    int x = i +1;
+    int y = j +1;
+    return hasFluidNeighbourLeft_(x,y);
+}
+double& StaggeredGrid::hasFluidNeighbourRight(int i, int j)
+{
+    // transform to x, y
+    int x = i +1;
+    int y = j +1;
+    return hasFluidNeighbourRight_(x,y);
+}
+double& StaggeredGrid::hasFluidNeighbourTop(int i, int j)
+{
+    // transform to x, y
+    int x = i +1;
+    int y = j +1;
+    return hasFluidNeighbourTop_(x,y);
+}
+double& StaggeredGrid::hasFluidNeighbourBottom(int i, int j)
+{
+    // transform to x, y
+    int x = i +1;
+    int y = j +1;
+    return hasFluidNeighbourBottom_(x,y);
 }
