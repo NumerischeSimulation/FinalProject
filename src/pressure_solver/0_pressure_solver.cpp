@@ -17,8 +17,74 @@ PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, d
 
     // prioritise left and right boundaries
     setBoundaryValuesLeft();
-    setBoundaryValuesRight();      
+    setBoundaryValuesRight();
+
+    applyObstacleBoundaryValues();
   }
+
+  void PressureSolver::applyObstacleBoundaryValues()
+{
+    for ( int i = 0; i < discretization_->nCells()[0]; i++)
+    { 
+        for (int j = 0; j < discretization_->nCells()[1]; j++)
+        {
+            if (discretization_->isObstacleCell(i,j)==1)
+            {
+                // has left neighbour
+                if (discretization_->hasFluidNeighbourLeft(i,j)==1)
+                {
+                    if (discretization_->hasFluidNeighbourTop(i,j)==1)
+                    {
+                        // left top
+                        discretization_->p(i,j) = 0.5 * (discretization_->p(i-1,j) + discretization_->p(i,j+1));
+                    }
+                    else if (discretization_->hasFluidNeighbourBottom(i,j)==1)
+                    {
+                        // left bottom
+                        discretization_->p(i,j) = 0.5 * (discretization_->p(i-1,j) + discretization_->p(i,j-1));
+                    } 
+                    else
+                    {
+                        // left
+                        discretization_->p(i,j) = discretization_->p(i-1,j);
+                    }
+                }
+                // has right neighbour
+                else if (discretization_->hasFluidNeighbourRight(i,j)==1)
+                {
+                    if (discretization_->hasFluidNeighbourTop(i,j)==1)
+                    {
+                        // right top
+                        discretization_->p(i,j) = 0.5 * (discretization_->p(i,j-1) + discretization_->p(i+1,j));                        
+                    }
+                    else if (discretization_->hasFluidNeighbourBottom(i,j)==1)
+                    {
+                        // right bottom
+                        discretization_->p(i,j) = 0.5 * (discretization_->p(i+1,j) + discretization_->p(i,j-1));                        
+                    } 
+                    else
+                    {
+                        // right
+                        discretization_->p(i,j) = discretization_->p(i+1,j);
+                    }
+                }
+                // has only top neighbour
+                else if (discretization_->hasFluidNeighbourTop(i,j)==1)
+                {
+                    // top
+                    discretization_->p(i,j) = discretization_->p(i,j+1);
+                }
+                // has only bottom neighbour
+                else if (discretization_->hasFluidNeighbourBottom(i,j)==1)
+                {
+                    // bottom
+                    discretization_->p(i,j) = discretization_->p(i,j-1);
+                }
+            }
+            
+        }
+    }
+}
 
   void PressureSolver::setBoundaryValuesLeft()
   {
@@ -76,12 +142,15 @@ PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, d
         { 
             for ( int j= discretization_->pJBegin() +1; j < discretization_->pJEnd() -1; j++)
             {
-                // calculate residual 
-                double pxx = (discretization_->p(i-1, j) - 2.0 *discretization_->p(i,j) + discretization_->p(i+1, j)) / (dx2);
-                double pyy = (discretization_->p(i, j-1) - 2.0 *discretization_->p(i,j) + discretization_->p(i, j+1)) / (dy2);
+              if (discretization_->isObstacleCell(i,j) != 1.)
+              {
+                  // calculate residual 
+                  double pxx = (discretization_->p(i-1, j) - 2.0 *discretization_->p(i,j) + discretization_->p(i+1, j)) / (dx2);
+                  double pyy = (discretization_->p(i, j-1) - 2.0 *discretization_->p(i,j) + discretization_->p(i, j+1)) / (dy2);
 
-                double resij = discretization_->rhs(i, j) - pxx - pyy;   
-                res = res + (pow(resij,2));
+                  double resij = discretization_->rhs(i, j) - pxx - pyy;   
+                  res = res + (pow(resij,2));
+              }
             }
         }
         

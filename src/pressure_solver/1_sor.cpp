@@ -39,9 +39,12 @@ void SOR::solve()
         { 
             for ( int j = discretization_->pJBegin() +1; j < discretization_->pJEnd() -1; j++)
             {
-               double sum_x = (discretization_->p(i+1, j) + discretization_->p(i-1, j)) / (dx2);
-               double sum_y = (discretization_->p(i, j+1) + discretization_->p(i, j-1)) / (dy2);
-               discretization_->p(i, j) = (1 - omega_) * discretization_->p(i, j) + omega_ * factor *(sum_x + sum_y - discretization_->rhs(i, j));
+                if (discretization_->isObstacleCell(i,j) != 1.)
+                {
+                    double sum_x = (discretization_->p(i+1, j) + discretization_->p(i-1, j)) / (dx2);
+                    double sum_y = (discretization_->p(i, j+1) + discretization_->p(i, j-1)) / (dy2);
+                    discretization_->p(i, j) = (1 - omega_) * discretization_->p(i, j) + omega_ * factor *(sum_x + sum_y - discretization_->rhs(i, j));
+                }
             }
         }
         

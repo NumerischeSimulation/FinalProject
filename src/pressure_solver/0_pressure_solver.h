@@ -21,6 +21,8 @@ protected:
     void setBoundaryValuesTop();
     void setBoundaryValuesBottom();
 
+    void applyObstacleBoundaryValues();
+
     double calculateResidual();
 
 protected:

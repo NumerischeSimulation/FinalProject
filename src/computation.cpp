@@ -41,15 +41,17 @@ void Computation::initialize(int argc, char *argv[])
     outputWriterText_     = std::make_unique<OutputWriterText>(discretization_);
 
     // set initial obstacle flags
-     for (int j = 5; j < 10; j++)
+     for (int j = 5; j < 15; j++)
      {
-       for (int i = 5; i < 10; i++)
+       for (int i = 5; i < 15; i++)
        {
            discretization_->isObstacleCell(i,j) = 1;
+           discretization_->p(i,j) = -1;
        }
      }
 
     // set obstacle neighbour flags
+    discretization_->setObstacleNeighbourFlags();
 }
 
 void Computation::runSimulation()
@@ -255,6 +257,110 @@ void Computation::applyBoundaryValues()
     }
 }
     
+void Computation::applyObstacleBoundaryValues()
+{
+    for ( int i = 0; i < discretization_->nCells()[0]; i++)
+    { 
+        for (int j = 0; j < discretization_->nCells()[1]; j++)
+        {
+            if (discretization_->isObstacleCell(i,j)==1)
+            {
+                // has left neighbour
+                if (discretization_->hasFluidNeighbourLeft(i,j)==1)
+                {
+                    if (discretization_->hasFluidNeighbourTop(i,j)==1)
+                    {
+                        // left top
+                        discretization_->u(i-1,j) = 0;
+                        discretization_->f(i-1,j) = 0;
+                        discretization_->v(i,j) = 0;
+                        discretization_->g(i,j) = 0;
+
+                        discretization_->u(i,j) = - discretization_->u(i,j+1);
+                        discretization_->v(i,j-1) = - discretization_->v(i-1,j-1);
+                    }
+                    else if (discretization_->hasFluidNeighbourBottom(i,j)==1)
+                    {
+                        // left bottom
+                        discretization_->u(i-1,j) = 0;
+                        discretization_->f(i-1,j) = 0;
+                        discretization_->v(i,j-1) = 0;
+                        discretization_->g(i,j-1) = 0;
+
+                        discretization_->u(i-1,j) = - discretization_->u(i-1,j-1);
+                        discretization_->v(i,j) = - discretization_->v(i-1,j);
+                    } 
+                    else
+                    {
+                        // left
+                        discretization_->u(i-1,j) = 0;
+                        discretization_->f(i-1,j) = 0;
+
+                        discretization_->v(i,j-1) = - discretization_->v(i-1,j-1);
+                        discretization_->v(i,j) = - discretization_->v(i-1,j);
+                    }
+                }
+                // has right neighbour
+                else if (discretization_->hasFluidNeighbourRight(i,j)==1)
+                {
+                    if (discretization_->hasFluidNeighbourTop(i,j)==1)
+                    {
+                        // right top
+                        discretization_->u(i,j) = 0;
+                        discretization_->f(i,j) = 0;
+                        discretization_->v(i,j) = 0;
+                        discretization_->g(i,j) = 0;
+
+                        discretization_->u(i-1,j) = - discretization_->u(i-1,j+1);
+                        discretization_->v(i,j-1) = - discretization_->v(i+1,j-1);
+                    }
+                    else if (discretization_->hasFluidNeighbourBottom(i,j)==1)
+                    {
+                        // right bottom
+                        discretization_->u(i,j) = 0;
+                        discretization_->f(i,j) = 0;
+                        discretization_->v(i,j-1) = 0;
+                        discretization_->g(i,j-1) = 0;
+
+                        discretization_->u(i-1,j) = - discretization_->u(i-1,j-1);
+                        discretization_->v(i,j) = - discretization_->v(i+1,j);
+                    } 
+                    else
+                    {
+                        // right
+                        discretization_->u(i,j) = 0;
+                        discretization_->f(i,j) = 0;
+
+                        discretization_->v(i,j) = - discretization_->v(i+1,j);
+                        discretization_->v(i,j-1) = - discretization_->v(i+1,j-1);
+                    }
+                }
+                // has only top neighbour
+                else if (discretization_->hasFluidNeighbourTop(i,j)==1)
+                {
+                    // top
+                    discretization_->u(i,j) = - discretization_->u(i,j+1);
+                    discretization_->u(i-1,j) = - discretization_->u(i-1,j+1);
+
+                    discretization_->v(i,j) = 0;
+                    discretization_->g(i,j) = 0;
+                }
+                // has only bottom neighbour
+                else if (discretization_->hasFluidNeighbourBottom(i,j)==1)
+                {
+                    // bottom
+                    discretization_->u(i,j) = - discretization_->u(i,j-1);
+                    discretization_->u(i-1,j) = - discretization_->u(i-1,j-1);
+
+                    discretization_->v(i,j-1) = 0;
+                    discretization_->g(i,j-1) = 0;
+                }
+            }
+            
+        }
+    }
+}
+
 void Computation::computePreliminaryVelocities()
 {
     // calculate F
@@ -262,10 +368,13 @@ void Computation::computePreliminaryVelocities()
     { 
         for ( int i = discretization_->uIBegin() +1; i < discretization_->uIEnd() -1; i++)
         {
-            double diffusion = discretization_->computeD2uDx2(i,j) + discretization_->computeD2uDy2(i,j);
-            double convection = - discretization_->computeDu2Dx(i,j) - discretization_->computeDuvDy(i,j);
-            double sum =  ((1. / settings_.re) * diffusion) + convection + settings_.g[0];
-            discretization_->f(i,j) = discretization_->u(i, j) + dt_ *  sum;
+            if (discretization_->isObstacleCell(i,j) != 1.)
+            {
+                double diffusion = discretization_->computeD2uDx2(i,j) + discretization_->computeD2uDy2(i,j);
+                double convection = - discretization_->computeDu2Dx(i,j) - discretization_->computeDuvDy(i,j);
+                double sum =  ((1. / settings_.re) * diffusion) + convection + settings_.g[0];
+                discretization_->f(i,j) = discretization_->u(i, j) + dt_ *  sum;
+            }
         }
     }
 
@@ -274,10 +383,13 @@ void Computation::computePreliminaryVelocities()
     { 
         for ( int i = discretization_->vIBegin() +1; i < discretization_->vIEnd() -1; i++)
         {
-            double diffusion = discretization_->computeD2vDx2(i,j) + discretization_->computeD2vDy2(i,j);
-            double convection = - discretization_->computeDuvDx(i,j) - discretization_->computeDv2Dy(i,j);
-            double sum = ((1. / settings_.re) * diffusion) + convection + settings_.g[1];
-            discretization_->g(i,j) = discretization_->v(i, j) + dt_ * sum;
+            if (discretization_->isObstacleCell(i,j) != 1.)
+            {
+                double diffusion = discretization_->computeD2vDx2(i,j) + discretization_->computeD2vDy2(i,j);
+                double convection = - discretization_->computeDuvDx(i,j) - discretization_->computeDv2Dy(i,j);
+                double sum = ((1. / settings_.re) * diffusion) + convection + settings_.g[1];
+                discretization_->g(i,j) = discretization_->v(i, j) + dt_ * sum;
+            }
         }
     }
 }
@@ -288,9 +400,12 @@ void Computation::computeRightHandSide()
     { 
         for ( int i = discretization_->pIBegin() +1; i < discretization_->pIEnd() -1; i++)
         {
-            double difference_f = (discretization_->f(i,j) - discretization_->f(i-1,j)) / discretization_->dx();
-            double difference_g = (discretization_->g(i,j) - discretization_->g(i,j-1)) / discretization_->dy();
-            discretization_->rhs(i,j) = (1 / dt_) * (difference_f + difference_g);
+            if (discretization_->isObstacleCell(i,j) != 1.)
+            {
+                double difference_f = (discretization_->f(i,j) - discretization_->f(i-1,j)) / discretization_->dx();
+                double difference_g = (discretization_->g(i,j) - discretization_->g(i,j-1)) / discretization_->dy();
+                discretization_->rhs(i,j) = (1 / dt_) * (difference_f + difference_g);
+            }
         }
     }
 }
@@ -307,7 +422,10 @@ void Computation::computeVelocities()
     { 
         for ( int i = discretization_->uIBegin() +1; i < discretization_->uIEnd() -1; i++)
         {
-            discretization_->u(i,j) = discretization_->f(i,j) - dt_ * discretization_->computeDpDx(i, j);
+            if (discretization_->isObstacleCell(i,j) != 1.)
+            {
+                discretization_->u(i,j) = discretization_->f(i,j) - dt_ * discretization_->computeDpDx(i, j);
+            }
         }
     }
 
@@ -316,7 +434,10 @@ void Computation::computeVelocities()
     { 
         for ( int i = discretization_->vIBegin() +1; i < discretization_->vIEnd() -1; i++)
         {
-            discretization_->v(i,j) = discretization_->g(i,j) - dt_ * discretization_->computeDpDy(i, j);
+            if (discretization_->isObstacleCell(i,j) != 1.)
+            {
+                discretization_->v(i,j) = discretization_->g(i,j) - dt_ * discretization_->computeDpDy(i, j);
+            }
         }
     }
 }
