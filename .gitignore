@@ -1,3 +1,20 @@
+# custom
+.vscode/**
+build/**
+src/build/**
+out/**
+calculations/**
+# docs/** # will not be run often
+!docs/doxyfile
+
+# macOS
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+*.DS_Store
+
+
 # Prerequisites
 *.d
 

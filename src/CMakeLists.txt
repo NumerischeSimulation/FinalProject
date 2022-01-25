@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 
 # Define the project name.
-project(numsim)
+project(finalproject)
 
 # Specify the name of the executable (${PROJECT_NAME} which is equal to what was set in the project() command).
 # Also specify the source files.
@@ -11,9 +11,9 @@ add_executable(${PROJECT_NAME}
    computation.cpp
    settings.cpp
    
-   pressure_solver/pressure_solver.cpp
-   pressure_solver/gauss_seidel.cpp
-   pressure_solver/sor.cpp
+   pressure_solver/0_pressure_solver.cpp
+   pressure_solver/1_gauss_seidel.cpp
+   pressure_solver/1_sor.cpp
    
    discretization/0_staggered_grid.cpp
    discretization/1_discretization.cpp

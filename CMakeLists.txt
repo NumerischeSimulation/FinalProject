@@ -1,5 +1,5 @@
 # Define the project name.
-project(numsim)
+project(finalproject)
 
 cmake_minimum_required(VERSION 3.8)
 
