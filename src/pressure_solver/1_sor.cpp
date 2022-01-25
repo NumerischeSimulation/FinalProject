@@ -1,4 +1,4 @@
-#include "sor.h"
+#include "1_sor.h"
 #include <math.h> 
 
 SOR::SOR(std::shared_ptr<Discretization> discretization, double epsilon, int maximumNumberOfIterations, double omega) :
@@ -9,8 +9,8 @@ SOR::SOR(std::shared_ptr<Discretization> discretization, double epsilon, int max
 
 void SOR::solve()
 { 
-    int nCellsx = discretization_->nCells()[0] -2; // inner cells
-    int nCellsy = discretization_->nCells()[1] -2; // inner cells
+    int nCellsx = discretization_->nCells()[0]; // inner cells
+    int nCellsy = discretization_->nCells()[1]; // inner cells
 
     //sell size
     double dy = discretization_->dy();

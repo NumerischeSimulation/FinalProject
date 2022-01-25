@@ -15,7 +15,11 @@ public:
 
 protected:
     // set boundary values
-     void setBoundaryValues();
+    void setBoundaryValues();
+    void setBoundaryValuesLeft();
+    void setBoundaryValuesRight();
+    void setBoundaryValuesTop();
+    void setBoundaryValuesBottom();
 
     double calculateResidual();
 
