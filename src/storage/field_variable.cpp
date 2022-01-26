@@ -19,7 +19,7 @@ double FieldVariable::interpolateAt(double x, double y) const // with x, y only 
 
     
     //  shift right and upper boundaries so that they don't use cells outside of the grid
-    if (iLeftEdge >= (*this).size_[0] -1)
+    if ((iLeftEdge >= (*this).size_[0] -1) || false )
     {
         iLeftEdge = iLeftEdge -1; // shift it one column to the right
     }

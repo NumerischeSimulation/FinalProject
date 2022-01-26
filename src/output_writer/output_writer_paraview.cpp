@@ -53,10 +53,19 @@ void OutputWriterParaview::writeFile(double currentTime)
   {
     for (int i = 0; i < nCells[0]+1; i++, index++)
     {
-      const double x = i*dx;
-      const double y = j*dy;
+      if (discretization_->isObstacleCell(i,j) == 1.)
+      {
+        arrayPressure->SetValue(index, NAN);
+      }
+      else
+      {
+        const double x = i*dx;
+        const double y = j*dy;
 
-      arrayPressure->SetValue(index, discretization_->p().interpolateAt(x,y));
+        arrayPressure->SetValue(index, discretization_->p().interpolateAt(x,y));
+      }
+
+      
     }
   }
 
@@ -87,12 +96,22 @@ void OutputWriterParaview::writeFile(double currentTime)
 
     for (int i = 0; i < nCells[0]+1; i++, index++)
     {
-      const double x = i*dx;
 
       std::array<double,3> velocityVector;
-      velocityVector[0] = discretization_->u().interpolateAt(x,y);
-      velocityVector[1] = discretization_->v().interpolateAt(x,y);
-      velocityVector[2] = 0.0;    // z-direction is 0
+      if (discretization_->isObstacleCell(i,j) == 1.)
+      {
+        velocityVector[0] = NAN;
+        velocityVector[1] = NAN;
+        velocityVector[2] = 0.0;    // z-direction is 0
+      }
+      else
+      {
+        const double x = i*dx;
+
+        velocityVector[0] = discretization_->u().interpolateAt(x,y);
+        velocityVector[1] = discretization_->v().interpolateAt(x,y);
+        velocityVector[2] = 0.0;    // z-direction is 0
+      }
 
       arrayVelocity->SetTuple(index, velocityVector.data());
     }
