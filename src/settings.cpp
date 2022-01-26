@@ -11,6 +11,7 @@ void Settings::printSettings()
     << ", top: ("  << dirichletBcTop[0] << "," << dirichletBcTop[1]  << ")"
     << ", left: ("  << dirichletBcLeft[0] << "," << dirichletBcLeft[1] << ")"
     << ", right: ("  << dirichletBcRight[0] << "," << dirichletBcRight[1] << ")" << std::endl
+    << "  outflow: bottom: " << outflowBottom << ", top: "  << outflowTop << ", left: "  << outflowLeft << ", right: "  << outflowRight << std::endl
     << "  useDonorCell: " << std::boolalpha << useDonorCell << ", alpha: " << alpha << std::endl
     << "  pressureSolver: " << pressureSolver << ", omega: " << omega << ", epsilon: " << epsilon << ", maximumNumberOfIterations: " << maximumNumberOfIterations << std::endl;
 }
@@ -117,7 +118,6 @@ void Settings::loadFromFile(std::string filename)
         std::cout << "The donor cell parameter is not understood: " << parameterName << std::endl;
         return;
       }
-      useDonorCell = (valueString == "true"); // bool
     }
     else if (parameterName == "alpha"){
       alpha = atof(valueString.c_str()); // double
@@ -145,6 +145,18 @@ void Settings::loadFromFile(std::string filename)
     }
     else if (parameterName == "dirichletRightY"){
       dirichletBcRight[1] = atof(valueString.c_str()); // double
+    }
+    else if (parameterName == "outflowBottom"){
+      outflowBottom = (valueString == "true"); // bool
+    }
+    else if (parameterName == "outflowTop"){
+      outflowTop = (valueString == "true"); // bool
+    }
+    else if (parameterName == "outflowLeft"){
+      outflowLeft = (valueString == "true"); // bool
+    }
+    else if (parameterName == "outflowRight"){
+      outflowRight = (valueString == "true"); // bool
     }
     else if (parameterName == "pressureSolver"){
       pressureSolver = valueString; // std:string

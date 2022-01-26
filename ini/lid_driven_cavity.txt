@@ -12,12 +12,18 @@ gY = 0.0
 # Dirichlet boundary conditions
 dirichletBottomX = 0
 dirichletBottomY = 0
-dirichletTopX    = 1
+dirichletTopX    = 0
 dirichletTopY    = 0
 dirichletLeftX   = 0
-dirichletLeftY   = 0
+dirichletLeftY   = 1
 dirichletRightX  = 0
 dirichletRightY  = 0
+
+# Outflow boundary conditions
+outflowBottom = false
+outflowTop    = false
+outflowLeft   = true
+outflowRight  = false
 
 # Discretization parameters
 nCellsX = 40          # number of cells in x and y direction
