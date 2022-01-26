@@ -13,6 +13,7 @@
 #include <iostream>  // for cout
 #include <cmath>
 #include <algorithm>
+#include <cmath>
 
 class Computation
 {

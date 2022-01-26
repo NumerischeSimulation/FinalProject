@@ -45,8 +45,13 @@ void Computation::initialize(int argc, char *argv[])
      {
        for (int i = 5; i < 15; i++)
        {
-           discretization_->isObstacleCell(i,j) = 1;
-           discretization_->p(i,j) = -1;
+           discretization_->isObstacleCell(i,j) = 1.;
+           discretization_->u(i,j) = NAN;
+           discretization_->v(i,j) = NAN;
+           discretization_->p(i,j) = NAN;
+           discretization_->f(i,j) = NAN;
+           discretization_->g(i,j) = NAN;
+           discretization_->rhs(i,j) = NAN;
        }
      }
 
@@ -62,12 +67,21 @@ void Computation::runSimulation()
     std::cout << "Starting at time: " << currentTime << std::endl;
     std::cout << "+++++++++++++++++++++++" << std::endl;
 
+    // 0
+    outputWriterParaview_->writeFile(currentTime);
+    outputWriterText_->writeFile(currentTime);
+
     // the steps correspond to the steps in our algorithm in the overleaf or docs/numsim-algos.tex
     while (currentTime < settings_.endTime)
     {
         // step 1: set the boundary values
         applyBoundaryValues();
         std::cout << "Applied boundary values for u/v and F/G." << std::endl;
+
+
+        applyObstacleBoundaryValues();
+        std::cout << "Applied obstacle boundary values for u/v and F/G." << std::endl;
+
 
         // step 2: compute time step width
         computeTimeStepWidth();
@@ -91,6 +105,7 @@ void Computation::runSimulation()
         // step 4: calculate F, G with first setting the boundary conditions of F, G (step 3)
         computePreliminaryVelocities();
 
+ 
         std::cout << "Computed preliminary velocities" << std::endl;
 
         // step 5: compute the right hand side of the pressure equation
@@ -273,10 +288,10 @@ void Computation::applyObstacleBoundaryValues()
                         // left top
                         discretization_->u(i-1,j) = 0;
                         discretization_->f(i-1,j) = 0;
-                        discretization_->v(i,j) = 0;
-                        discretization_->g(i,j) = 0;
+                        discretization_->v(i,  j) = 0;
+                        discretization_->g(i,  j) = 0;
 
-                        discretization_->u(i,j) = - discretization_->u(i,j+1);
+                        discretization_->u(i,j)   = - discretization_->u(i,  j+1);
                         discretization_->v(i,j-1) = - discretization_->v(i-1,j-1);
                     }
                     else if (discretization_->hasFluidNeighbourBottom(i,j)==1)
@@ -287,7 +302,7 @@ void Computation::applyObstacleBoundaryValues()
                         discretization_->v(i,j-1) = 0;
                         discretization_->g(i,j-1) = 0;
 
-                        discretization_->u(i-1,j) = - discretization_->u(i-1,j-1);
+                        discretization_->u(i,j) = - discretization_->u(i,j-1);
                         discretization_->v(i,j) = - discretization_->v(i-1,j);
                     } 
                     else
@@ -297,7 +312,7 @@ void Computation::applyObstacleBoundaryValues()
                         discretization_->f(i-1,j) = 0;
 
                         discretization_->v(i,j-1) = - discretization_->v(i-1,j-1);
-                        discretization_->v(i,j) = - discretization_->v(i-1,j);
+                        discretization_->v(i,j)   = - discretization_->v(i-1,j);
                     }
                 }
                 // has right neighbour
@@ -349,7 +364,7 @@ void Computation::applyObstacleBoundaryValues()
                 else if (discretization_->hasFluidNeighbourBottom(i,j)==1)
                 {
                     // bottom
-                    discretization_->u(i,j) = - discretization_->u(i,j-1);
+                    discretization_->u(i,  j) = - discretization_->u(i,  j-1);
                     discretization_->u(i-1,j) = - discretization_->u(i-1,j-1);
 
                     discretization_->v(i,j-1) = 0;
@@ -368,7 +383,8 @@ void Computation::computePreliminaryVelocities()
     { 
         for ( int i = discretization_->uIBegin() +1; i < discretization_->uIEnd() -1; i++)
         {
-            if (discretization_->isObstacleCell(i,j) != 1.)
+            // skip obstacles and left boundary of obstacles as we already set there the boundary cond for F
+            if ((discretization_->isObstacleCell(i,j) != 1.)  && (discretization_->hasFluidNeighbourLeft(i+1,j) != 1.))
             {
                 double diffusion = discretization_->computeD2uDx2(i,j) + discretization_->computeD2uDy2(i,j);
                 double convection = - discretization_->computeDu2Dx(i,j) - discretization_->computeDuvDy(i,j);
@@ -383,7 +399,8 @@ void Computation::computePreliminaryVelocities()
     { 
         for ( int i = discretization_->vIBegin() +1; i < discretization_->vIEnd() -1; i++)
         {
-            if (discretization_->isObstacleCell(i,j) != 1.)
+            // skip obstacles and bottom boundary of obstacles as we already set the boundary cond
+            if ((discretization_->isObstacleCell(i,j) != 1.) && (discretization_->hasFluidNeighbourBottom(i,j+1) != 1.))
             {
                 double diffusion = discretization_->computeD2vDx2(i,j) + discretization_->computeD2vDy2(i,j);
                 double convection = - discretization_->computeDuvDx(i,j) - discretization_->computeDv2Dy(i,j);
@@ -422,7 +439,8 @@ void Computation::computeVelocities()
     { 
         for ( int i = discretization_->uIBegin() +1; i < discretization_->uIEnd() -1; i++)
         {
-            if (discretization_->isObstacleCell(i,j) != 1.)
+            // skip obstacle cells and cells where we already set boundary conditions for u
+            if ((discretization_->isObstacleCell(i,j) != 1.)   && (discretization_->hasFluidNeighbourLeft(i+1,j) != 1.))
             {
                 discretization_->u(i,j) = discretization_->f(i,j) - dt_ * discretization_->computeDpDx(i, j);
             }
@@ -434,7 +452,8 @@ void Computation::computeVelocities()
     { 
         for ( int i = discretization_->vIBegin() +1; i < discretization_->vIEnd() -1; i++)
         {
-            if (discretization_->isObstacleCell(i,j) != 1.)
+            // skip obstacle cells and cells where we already set boundary conditions for v
+            if ((discretization_->isObstacleCell(i,j) != 1.)   && (discretization_->hasFluidNeighbourBottom(i,j+1) != 1.))
             {
                 discretization_->v(i,j) = discretization_->g(i,j) - dt_ * discretization_->computeDpDy(i, j);
             }

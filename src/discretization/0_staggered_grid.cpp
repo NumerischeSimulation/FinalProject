@@ -29,27 +29,27 @@ void StaggeredGrid::setObstacleNeighbourFlags()
     { 
         for (int j = 0; j < nCells_[1]; j++)
         {
-            if (isObstacleCell(i,j)==1)
+            if (isObstacleCell(i,j)==1.)
             {
                 // left neighbour
-                if (isObstacleCell(i-1,j)==1)
+                if (isObstacleCell(i-1,j)!=1.)
                 {
-                    hasFluidNeighbourLeft_(i,j)=1;
+                    hasFluidNeighbourLeft(i,j)=1.;
                 }
                 // right neighbour
-                if (isObstacleCell(i+1,j)==1)
+                if (isObstacleCell(i+1,j)!=1.)
                 {
-                    hasFluidNeighbourRight_(i,j)=1;
+                    hasFluidNeighbourRight(i,j)=1.;
                 }
                 // top neighbour
-                if (isObstacleCell(i,j+1)==1)
+                if (isObstacleCell(i,j+1)!=1.)
                 {
-                    hasFluidNeighbourTop_(i,j)=1;
+                    hasFluidNeighbourTop(i,j)=1.;
                 }
                 // bottom neighbour
-                if (isObstacleCell(i,j-1)==1)
+                if (isObstacleCell(i,j-1)!=1.)
                 {
-                    hasFluidNeighbourBottom_(i,j)=1;
+                    hasFluidNeighbourBottom(i,j)=1.;
                 }
             }
             

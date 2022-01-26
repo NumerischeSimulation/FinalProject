@@ -31,9 +31,9 @@ PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, d
             if (discretization_->isObstacleCell(i,j)==1)
             {
                 // has left neighbour
-                if (discretization_->hasFluidNeighbourLeft(i,j)==1)
+                if (discretization_->hasFluidNeighbourLeft(i,j)==1.)
                 {
-                    if (discretization_->hasFluidNeighbourTop(i,j)==1)
+                    if (discretization_->hasFluidNeighbourTop(i,j)==1.)
                     {
                         // left top
                         discretization_->p(i,j) = 0.5 * (discretization_->p(i-1,j) + discretization_->p(i,j+1));
@@ -55,7 +55,7 @@ PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, d
                     if (discretization_->hasFluidNeighbourTop(i,j)==1)
                     {
                         // right top
-                        discretization_->p(i,j) = 0.5 * (discretization_->p(i,j-1) + discretization_->p(i+1,j));                        
+                        discretization_->p(i,j) = 0.5 * (discretization_->p(i,j+1) + discretization_->p(i+1,j));                        
                     }
                     else if (discretization_->hasFluidNeighbourBottom(i,j)==1)
                     {
@@ -137,6 +137,7 @@ PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, d
 
    
     double res = 0.0;
+    int nFluidCells = 0;
 
         for ( int i = discretization_->pIBegin() +1; i < discretization_->pIEnd() -1; i++)
         { 
@@ -150,12 +151,13 @@ PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, d
 
                   double resij = discretization_->rhs(i, j) - pxx - pyy;   
                   res = res + (pow(resij,2));
+                  nFluidCells++;
               }
             }
         }
         
         //calculate residual
-         res = res/(nCellsx * nCellsy);
+         res = res/(nFluidCells);
          return res;
 
   }

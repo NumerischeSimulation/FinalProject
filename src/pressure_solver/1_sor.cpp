@@ -9,8 +9,8 @@ SOR::SOR(std::shared_ptr<Discretization> discretization, double epsilon, int max
 
 void SOR::solve()
 { 
-    int nCellsx = discretization_->nCells()[0]; // inner cells
-    int nCellsy = discretization_->nCells()[1]; // inner cells
+    //int nCellsx = discretization_->nCells()[0]; // inner cells
+    //int nCellsy = discretization_->nCells()[1]; // inner cells
 
     //sell size
     double dy = discretization_->dy();
@@ -22,6 +22,7 @@ void SOR::solve()
     int iteration = 0;
     
     //initial residual
+    applyObstacleBoundaryValues();
     double res = calculateResidual();
 
    
@@ -54,6 +55,7 @@ void SOR::solve()
         
         //set new boundary values
         setBoundaryValues();
+        
 
         res = calculateResidual();
     }

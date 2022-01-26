@@ -1,5 +1,5 @@
 # custom
-.vscode/**
+#.vscode/**
 build/**
 src/build/**
 out/**
