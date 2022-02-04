@@ -226,6 +226,19 @@ void Computation::applyBoundaryValues()
     // --
     if (settings_.outflowBottom)
     {
+        // set u, f
+        for (int i = discretization_->uIBegin(); i < discretization_->uIEnd(); i++)
+        {
+            discretization_->u(i, discretization_->uJBegin()) = discretization_->u(i, discretization_->uJBegin() + 1);
+            discretization_->f(i, discretization_->uJBegin()) = discretization_->u(i, discretization_->uJBegin());
+        }
+
+        // set v, g
+        for (int i = discretization_->vIBegin(); i < discretization_->vIEnd(); i++)
+        {
+            discretization_->v(i, discretization_->vJBegin()) = discretization_->v(i, discretization_->vJBegin() + 1);
+            discretization_->g(i, discretization_->vJBegin()) = discretization_->v(i, discretization_->vJBegin());
+        }
     }
     else
     {
@@ -248,6 +261,19 @@ void Computation::applyBoundaryValues()
     // --
     if (settings_.outflowLeft)
     {
+        // set u, f
+        for (int j = discretization_->uJBegin(); j < discretization_->uJEnd(); j++)
+        {
+            discretization_->u(discretization_->uIBegin(), j) = discretization_->u(discretization_->uIBegin(), j + 1);
+            discretization_->f(discretization_->uIBegin(), j) = discretization_->u(discretization_->uIBegin(), j);
+        }
+
+        // set v, g
+        for (int j = discretization_->vJBegin(); j < discretization_->vJEnd(); j++)
+        {
+            discretization_->v(discretization_->vIBegin(), j) = discretization_->v(discretization_->vIBegin(), j + 1);
+            discretization_->g(discretization_->vIBegin(), j) = discretization_->v(discretization_->vIBegin(), j);
+        }
     }
     else
     {
@@ -270,6 +296,19 @@ void Computation::applyBoundaryValues()
     // --
     if (settings_.outflowRight)
     {
+        // set u, f
+        for (int j = discretization_->uJBegin(); j < discretization_->uJEnd(); j++)
+        {
+            discretization_->u(discretization_->uIEnd() - 1, j) = discretization_->u(discretization_->uIEnd() - 2, j);
+            discretization_->f(discretization_->uIEnd() - 1, j) = discretization_->u(discretization_->uIEnd() - 1, j);
+        }
+
+        // set v, g
+        for (int j = discretization_->vJBegin(); j < discretization_->vJEnd(); j++)
+        {
+            discretization_->v(discretization_->vIEnd() - 1, j) = discretization_->v(discretization_->vIEnd() - 2, j);
+            discretization_->g(discretization_->vIEnd() - 1, j) = discretization_->v(discretization_->vIEnd() - 1, j);
+        }
     }
     else
     {
