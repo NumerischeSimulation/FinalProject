@@ -70,7 +70,9 @@
         "future": "cpp",
         "cfenv": "cpp",
         "typeindex": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp"
     },
     "cmake.configureOnOpen": true
 }

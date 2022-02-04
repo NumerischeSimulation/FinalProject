@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <iostream>  // for cout
+#include <vector>
 
 #include "storage/field_variable.h"
 
@@ -114,6 +115,12 @@ public:
     //! one after last valid index for p in y direction 
     int pJEnd() const;
 
+    // - old boundary values - #badcode
+    std::vector<double> oldBoundaryValueTop_;
+    std::vector<double> oldBoundaryValueBottom_;
+    std::vector<double> oldBoundaryValueLeft_;
+    std::vector<double> oldBoundaryValueRight_;
+
 protected:
     const std::array<int, 2> nCells_;
     const std::array<double,2> meshWidth_;
@@ -131,5 +138,4 @@ protected:
     FieldVariable hasFluidNeighbourRight_;
     FieldVariable hasFluidNeighbourTop_;
     FieldVariable hasFluidNeighbourBottom_;
-
 };

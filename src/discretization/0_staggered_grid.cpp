@@ -21,6 +21,12 @@ StaggeredGrid::StaggeredGrid(std::array<int,2> nCells, std::array<double,2> mesh
     hasFluidNeighbourRight_.setToZero();
     hasFluidNeighbourTop_.setToZero();
     hasFluidNeighbourBottom_.setToZero();
+
+    // init oldBoundaryValue
+    oldBoundaryValueTop_.resize(nCells[0], 0.0); // we go from 0 to n-1 on the boundary
+    oldBoundaryValueBottom_.resize(nCells[0], 0.0);
+    oldBoundaryValueLeft_.resize(nCells[1], 0.0);
+    oldBoundaryValueRight_.resize(nCells[1], 0.0);
 }
 
 void StaggeredGrid::setObstacleNeighbourFlags() 
