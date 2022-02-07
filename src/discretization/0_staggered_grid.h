@@ -3,6 +3,8 @@
 #include <memory>
 #include <iostream>  // for cout
 #include <vector>
+#include <fstream>
+#include <sstream>
 
 #include "storage/field_variable.h"
 
@@ -16,6 +18,9 @@ public:
     //! get number of cells in each coordinate direction
     const std::array<int, 2> nCells() const;
 
+    //! set obstacle flags
+    void setObstacleFlags(std::string pathToGeometry);
+    //! set flags of obstacle neighbours
     void setObstacleNeighbourFlags();
 
     //! get a reference to field variable u 

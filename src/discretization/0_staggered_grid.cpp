@@ -29,6 +29,63 @@ StaggeredGrid::StaggeredGrid(std::array<int,2> nCells, std::array<double,2> mesh
     oldBoundaryValueRight_.resize(nCells[1], 0.0);
 }
 
+void StaggeredGrid::setObstacleFlags(std::string pathToGeometry) 
+{
+    std::cout << "The path to the complex geometry: " << pathToGeometry << std::endl;
+
+    // open file
+    std::ifstream myFile(pathToGeometry);
+    if(!myFile.is_open()) 
+    {
+        throw std::runtime_error("Could not open file");
+    }
+
+    // one row as a string with comma-separated values
+    std::string rowString;
+
+    // a single entry as a string
+    std::string entryString;
+
+    // read matrixDataFile row by row
+    int i = 0; // column number
+    int j = 0; // row number
+    while (std::getline(myFile, rowString)) 
+    {
+        // convert rowString to a stream
+        std::stringstream rowStringStream(rowString);
+
+        // read rowStringStream entry by entry
+        while (std::getline(rowStringStream, entryString, ',')) {
+            int value = int(atof(entryString.c_str()));
+            if (i < nCells_[0] && j < nCells_[1])
+            {
+                if(value == 1)
+                {
+                    isObstacleCell(i, j) = 1.;
+                    u(i, j) = NAN;
+                    v(i, j) = NAN;
+                    p(i, j) = NAN;
+                    f(i, j) = NAN;
+                    g(i, j) = NAN;
+                    rhs(i, j) = NAN;
+                }
+            }
+            ++i;
+        }
+        if (i != nCells_[0]) 
+        {
+            throw std::runtime_error("The image has too few columns!");
+        }
+    i = 0;
+    ++j;
+  }
+
+  if (j != nCells_[1]) 
+  {
+    throw std::runtime_error("The image has too few rows!");
+  }
+}
+
 void StaggeredGrid::setObstacleNeighbourFlags() 
 {
     for ( int i = 0; i < nCells_[0]; i++)

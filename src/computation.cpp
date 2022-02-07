@@ -45,6 +45,12 @@ void Computation::initialize(int argc, char *argv[])
     outputWriterText_ = std::make_unique<OutputWriterText>(discretization_);
 
 
+    // set obstactle flags
+    if (settings_.complexGeometryPath != "None")
+    {
+        discretization_->setObstacleFlags(settings_.complexGeometryPath);
+    }
+
     /*
     // set initial obstacle flags
     for (int j = 0; j < 20; j++)

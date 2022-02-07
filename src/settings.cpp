@@ -6,6 +6,7 @@ void Settings::printSettings()
 {
   std::cout << "Settings: " << std::endl
     << "  physicalSize: " << physicalSize[0] << " x " << physicalSize[1] << ", nCells: " << nCells[0] << " x " << nCells[1] << std::endl
+    << " path to file with geometry layout: " << complexGeometryPath << std::endl
     << "  endTime: " << endTime << " s, re: " << re << ", g: (" << g[0] << "," << g[1] << "), tau: " << tau << ", maximum dt: " << maximumDt << std::endl
     << "  dirichletBC: bottom: (" << dirichletBcBottom[0] << "," << dirichletBcBottom[1]  << ")"
     << ", top: ("  << dirichletBcTop[0] << "," << dirichletBcTop[1]  << ")"
@@ -18,6 +19,9 @@ void Settings::printSettings()
 
 void Settings::loadFromFile(std::string filename)
 {
+  // initialize
+  complexGeometryPath = "None";
+
   // open file
   std::ifstream file(filename.c_str(), std::ios::in);
 
@@ -90,6 +94,9 @@ void Settings::loadFromFile(std::string filename)
     } 
     else if (parameterName == "physicalSizeY"){
       physicalSize[1] = atof(valueString.c_str()); // double
+    }
+    else if (parameterName == "complexGeometryPath"){
+      complexGeometryPath = valueString; // std:string
     }
     else if (parameterName == "re"){
       re = atof(valueString.c_str()); // double
