@@ -61,13 +61,14 @@ void StaggeredGrid::setObstacleFlags(std::string pathToGeometry)
             {
                 if(value == 1)
                 {
-                    isObstacleCell(i, j) = 1.;
-                    u(i, j) = NAN;
-                    v(i, j) = NAN;
-                    p(i, j) = NAN;
-                    f(i, j) = NAN;
-                    g(i, j) = NAN;
-                    rhs(i, j) = NAN;
+                    // write top to bottom as the origin is in the bottom left corner
+                    isObstacleCell(i, nCells_[1] - 1 - j) = 1.;
+                    u(i, nCells_[1] - 1 - j) = NAN;
+                    v(i, nCells_[1] - 1 - j) = NAN;
+                    p(i, nCells_[1] - 1 - j) = NAN;
+                    f(i, nCells_[1] - 1 - j) = NAN;
+                    g(i, nCells_[1] - 1 - j) = NAN;
+                    rhs(i, nCells_[1] - 1 - j) = NAN;
                 }
             }
             ++i;
