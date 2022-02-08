@@ -20,6 +20,8 @@ struct Settings
   bool useDonorCell = false;         //< if the donor cell scheme schould be used
   double alpha = 0.5;                //< factor for donor-cell scheme
 
+  double underrelaxationVelocity = 0;    //< underrelaxation constant for the velocity
+
   std::array<double,2> dirichletBcBottom;  //< prescribed values of u,v at bottom of domain
   std::array<double,2> dirichletBcTop;     //< prescribed values of u,v at top of domain
   std::array<double,2> dirichletBcLeft;    //< prescribed values of u,v at left of domain

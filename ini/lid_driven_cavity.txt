@@ -10,6 +10,8 @@ re = 1000             # Reynolds number
 gX = 0.0              # external forces, set to (gX,gY) = (0,-9.81) to account for gravity
 gY = 0.0
 
+underrelaxationVelocity = 0.2
+
 # Dirichlet boundary conditions
 dirichletBottomX = 0
 dirichletBottomY = 0

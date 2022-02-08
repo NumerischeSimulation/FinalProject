@@ -510,7 +510,8 @@ void Computation::computeVelocities()
             // skip obstacle cells and cells where we already set boundary conditions for u
             if ((discretization_->isObstacleCell(i, j) != 1.) && (discretization_->hasFluidNeighbourLeft(i + 1, j) != 1.))
             {
-                discretization_->u(i, j) = discretization_->f(i, j) - dt_ * discretization_->computeDpDx(i, j);
+                // underrelaxation
+                discretization_->u(i, j) = (1 - settings_.underrelaxationVelocity) * discretization_->u(i, j) + settings_.underrelaxationVelocity * (discretization_->f(i, j) -  dt_ * discretization_->computeDpDx(i, j));
             }
         }
     }
@@ -523,7 +524,8 @@ void Computation::computeVelocities()
             // skip obstacle cells and cells where we already set boundary conditions for v
             if ((discretization_->isObstacleCell(i, j) != 1.) && (discretization_->hasFluidNeighbourBottom(i, j + 1) != 1.))
             {
-                discretization_->v(i, j) = discretization_->g(i, j) - dt_ * discretization_->computeDpDy(i, j);
+                // underrelaxation
+                discretization_->v(i, j) = (1 - settings_.underrelaxationVelocity) * discretization_->v(i, j) + settings_.underrelaxationVelocity * (discretization_->g(i, j) - dt_ * discretization_->computeDpDy(i, j));
             }
         }
     }

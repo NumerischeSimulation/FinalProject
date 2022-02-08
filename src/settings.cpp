@@ -14,6 +14,7 @@ void Settings::printSettings()
     << ", right: ("  << dirichletBcRight[0] << "," << dirichletBcRight[1] << ")" << std::endl
     << "  outflow: bottom: " << outflowBottom << ", top: "  << outflowTop << ", left: "  << outflowLeft << ", right: "  << outflowRight << std::endl
     << "  useDonorCell: " << std::boolalpha << useDonorCell << ", alpha: " << alpha << std::endl
+    << " underrelaxation constant: " << underrelaxationVelocity << std::endl
     << "  pressureSolver: " << pressureSolver << ", omega: " << omega << ", epsilon: " << epsilon << ", maximumNumberOfIterations: " << maximumNumberOfIterations << std::endl;
 }
 
@@ -125,6 +126,9 @@ void Settings::loadFromFile(std::string filename)
         std::cout << "The donor cell parameter is not understood: " << parameterName << std::endl;
         return;
       }
+    }
+    else if (parameterName == "underrelaxationVelocity"){
+      underrelaxationVelocity = atof(valueString.c_str()); // double
     }
     else if (parameterName == "alpha"){
       alpha = atof(valueString.c_str()); // double
