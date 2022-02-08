@@ -31,6 +31,10 @@ void Computation::initialize(int argc, char *argv[])
     {
         pressureSolver_ = std::make_unique<GaussSeidel>(discretization_, settings_.epsilon, settings_.maximumNumberOfIterations);
     }
+    else if (settings_.pressureSolver == "CG")
+    {
+        pressureSolver_ = std::make_unique<CGSolver>(discretization_, settings_.epsilon, settings_.maximumNumberOfIterations);
+    }
     else
     {
         std::cout << "The name of the pressure solver is not understood" << settings_.pressureSolver << std::endl;
@@ -50,23 +54,6 @@ void Computation::initialize(int argc, char *argv[])
     {
         discretization_->setObstacleFlags(settings_.complexGeometryPath);
     }
-
-    /*
-    // set initial obstacle flags
-    for (int j = 0; j < 20; j++)
-    {
-        for (int i = 0; i < settings_.nCells[0]; i++)
-        {
-            discretization_->isObstacleCell(i, j) = 1.;
-            discretization_->u(i, j) = NAN;
-            discretization_->v(i, j) = NAN;
-            discretization_->p(i, j) = NAN;
-            discretization_->f(i, j) = NAN;
-            discretization_->g(i, j) = NAN;
-            discretization_->rhs(i, j) = NAN;
-        }
-    }
-    */
 
     // set obstacle neighbour flags
     discretization_->setObstacleNeighbourFlags();

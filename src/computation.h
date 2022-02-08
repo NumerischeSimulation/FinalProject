@@ -5,6 +5,7 @@
 #include "discretization/2_donor_cell.h"
 #include "pressure_solver/1_sor.h"
 #include "pressure_solver/1_gauss_seidel.h"
+#include "pressure_solver/1_cg_solver.h"
 #include "output_writer/output_writer_paraview.h"
 #include "output_writer/output_writer_text.h"
 #include "storage/field_variable.h"

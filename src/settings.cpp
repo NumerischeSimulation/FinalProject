@@ -22,6 +22,7 @@ void Settings::loadFromFile(std::string filename)
 {
   // initialize
   complexGeometryPath = "None";
+  underrelaxationVelocity = 1.;
 
   // open file
   std::ifstream file(filename.c_str(), std::ios::in);
