@@ -2,41 +2,52 @@
 
 Final project for the course Numerische Simulation at the University of Stuttgart in the winter term 2021/22.
 
-## Content
+## Overview
 
-1. complex geometries
-2. boundary conditions
-3. ?
+New features compared to our previous submissions:
+
+1. inflow and outflow boundary conditions
+2. custom complex geometries
+
 
 ## Installation and Prerequisites
 
-- gimp for image creation
-- matlab for image preprocessing
 - gcc
 - libvtk7.1(p)
 - cmake
 - paraview for visualization
+- Gimp for creating custom geometries
+- MATLAB to transform the image to an input csv file for our program
 
 ## Usage
 
 ### Create custom complex geometry
 
-To create a black-white image of your custom complex geometry e.g. in [Gimp](https://www.gimp.org/).
-Notice that the image has to respect the *two-cells-criterion*: very obstacle has to be at least two cells thick in x- and in y-direction.
+We created arbitrary geometries as well as more complex scenerios as 8 bit grayscale images in [Gimp](https://www.gimp.org/). The pixel size of the image will later correspond to the number of cells used in the simulation. 
 
-To convert black-white `.png`or `.jpeg` images to `.csv` files suitable for the simulation:
+### Transform the image to simulation input
 
-Run from the [matlab](https://www.mathworks.de/products/matlab/index.html) command line: `imageToInputCSV.m <your_image>`
+Our program uses a .csv file to read in the geometry and import obstacle flags. A zero in the  csv table corresponds to a fluid cell, while a one means that the cell represents an obstacle.
 
-The `matlab` script will enforce the two-cells-criterion.
+To convert grayscale `.png` or `.jpeg` images to `.csv` files suitable for the simulation the small MATLAB script `image2inputcsv.m` is available. 
+Run from the [MATLAB](https://www.mathworks.de/products/matlab/index.html) command line `image2inputcsv(pathToImage, nameOfCSV)`. The algorithm will transform pixels with grayvalue < 256/2 to a fluid cell and the dark cells with a grayvalue > 256/2 to an obstacle cell. 
+
+The MATLAB script will also enforces the two-cells-criterion in the inner domain in an iterative fashion by deleting obstacle cells that do not fulfill it. 
 
 ### Specify scenario
 
-The scenario can be specified in `<your_szenario.txt` document in `/ini`.
-Further, the path to the complex geometry can be specified there.
+Simulation parameters for a scenario can be specified in the `<your_szenario.txt` document in `/ini`.
+A path to the complex geometry's .csv file can be specified there. 
 Be careful that the dimensions of the image file and the dimensions specified in the scenario match.
 
-An exemplary scenario is preconfigured in ?.
+Furthermore, settings for boundary conditions (SLIP, INFLOW, OUTFLOW) can be specified here for each domain side. 
+
+We provide you here with the following scenarious:
+
+- padded lid driven cavity
+- horizontal and vertical channels to test the INFLOW/OUTFLOW boundary conditions
+- backward facing step in various resolutions
+- bifurcating channel flow
 
 ### Build and run simulation
 
@@ -59,12 +70,11 @@ To run the simulation:
 ### Visualization
 
 Visualize the simulation result with [paraview](https://www.paraview.org).
-Select the stack of the corresponding `.vtk` files in the `build/out` folder and click apply.
-Then you can play the simulation.
+Select the stack of the corresponding `.vtk` files in the `build/out` folder and click apply to visualize the simulation.
 
 ## Authors
 
-We worked on the project mostly together.
+We worked and debugged on the project 90% of the time together.
 
 * **Author 1** - [janiswissinger](https://github.com/janiswissinger)
 
