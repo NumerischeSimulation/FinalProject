@@ -17,16 +17,16 @@ dirichletBottomX = 0
 dirichletBottomY = 0
 dirichletTopX    = 0
 dirichletTopY    = 0
-dirichletLeftX   = 1   # inflow
+dirichletLeftX   = 0   # inflow
 dirichletLeftY   = 0  
-dirichletRightX  = 0
+dirichletRightX  = -1
 dirichletRightY  = 0
 
 # Outflow boundary conditions
 outflowBottom = false
 outflowTop    = false
-outflowLeft   = false
-outflowRight  = true
+outflowLeft   = true
+outflowRight  = false
 
 # Discretization parameters
 nCellsX = 60          # number of cells in x and y direction

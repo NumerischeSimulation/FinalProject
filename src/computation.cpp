@@ -262,7 +262,7 @@ void Computation::applyBoundaryValues()
         // set u, f
         for (int j = discretization_->uJBegin(); j < discretization_->uJEnd(); j++)
         {
-            discretization_->u(discretization_->uIBegin(), j) = discretization_->u(discretization_->uIBegin(), j + 1);
+            discretization_->u(discretization_->uIBegin(), j) = discretization_->u(discretization_->uIBegin() + 1, j);
             discretization_->f(discretization_->uIBegin(), j) = 2 * discretization_->u(discretization_->uIBegin(), j) - discretization_->oldBoundaryValueLeft_[j];
             discretization_->oldBoundaryValueLeft_[j] = discretization_->u(discretization_->uIBegin(), j);
         }
@@ -270,7 +270,7 @@ void Computation::applyBoundaryValues()
         // set v, g
         for (int j = discretization_->vJBegin(); j < discretization_->vJEnd(); j++)
         {
-            discretization_->v(discretization_->vIBegin(), j) = discretization_->v(discretization_->vIBegin(), j + 1);
+            discretization_->v(discretization_->vIBegin(), j) = discretization_->v(discretization_->vIBegin() + 1, j);
             // discretization_->g(discretization_->vIBegin(), j) = discretization_->v(discretization_->vIBegin(), j);
         }
     }
