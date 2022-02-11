@@ -31,10 +31,6 @@ void Computation::initialize(int argc, char *argv[])
     {
         pressureSolver_ = std::make_unique<GaussSeidel>(discretization_, settings_.epsilon, settings_.maximumNumberOfIterations, settings_.outflowBottom, settings_.outflowTop, settings_.outflowLeft, settings_.outflowRight);
     }
-    else if (settings_.pressureSolver == "CG")
-    {
-        pressureSolver_ = std::make_unique<CGSolver>(discretization_, settings_.epsilon, settings_.maximumNumberOfIterations, settings_.outflowBottom, settings_.outflowTop, settings_.outflowLeft, settings_.outflowRight);
-    }
     else
     {
         std::cout << "The name of the pressure solver is not understood" << settings_.pressureSolver << std::endl;
