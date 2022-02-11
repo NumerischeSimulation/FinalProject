@@ -23,6 +23,7 @@ module load cmake/3.18.2
 
 # run code
 rm -rf build/
+mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make install
