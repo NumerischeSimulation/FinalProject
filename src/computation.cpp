@@ -109,7 +109,7 @@ void Computation::runSimulation()
         // step 6: solve the pressure equation
         computePressure();
 
-        std::cout << "Computed presure" << std::endl;
+        std::cout << "Computed pressure" << std::endl;
 
         // step 7: calculate the final velocities
         computeVelocities();
@@ -120,6 +120,8 @@ void Computation::runSimulation()
         outputWriterParaview_->writeFile(currentTime);
         outputWriterText_->writeFile(currentTime);
     }
+
+    std::cout << "Simulation finished!!" << std::endl;
 }
 
 void Computation::computeTimeStepWidth()
@@ -197,8 +199,10 @@ void Computation::applyBoundaryValues()
         for (int i = discretization_->vIBegin(); i < discretization_->vIEnd(); i++)
         {
             discretization_->v(i, discretization_->vJEnd() - 1) = discretization_->v(i, discretization_->vJEnd() - 2);
-            discretization_->g(i, discretization_->vJEnd() - 1) = 2 * discretization_->v(i, discretization_->vJEnd() - 1) - discretization_->oldBoundaryValueTop_[i];
-            discretization_->oldBoundaryValueTop_[i] = discretization_->v(i, discretization_->vJEnd() -1);
+            discretization_->g(i, discretization_->vJEnd() - 1) = discretization_->v(i, discretization_->vJEnd() - 1);
+            
+            // discretization_->g(i, discretization_->vJEnd() - 1) = 2 * discretization_->v(i, discretization_->vJEnd() - 1) - discretization_->oldBoundaryValueTop_[i];
+            // discretization_->oldBoundaryValueTop_[i] = discretization_->v(i, discretization_->vJEnd() -1);
         }
 
     }
@@ -234,8 +238,10 @@ void Computation::applyBoundaryValues()
         for (int i = discretization_->vIBegin(); i < discretization_->vIEnd(); i++)
         {
             discretization_->v(i, discretization_->vJBegin()) = discretization_->v(i, discretization_->vJBegin() + 1);
-            discretization_->g(i, discretization_->vJBegin()) = 2 * discretization_->v(i, discretization_->vJBegin()) - discretization_->oldBoundaryValueBottom_[i];
-            discretization_->oldBoundaryValueBottom_[i] = discretization_->v(i, discretization_->vJBegin());
+            discretization_->g(i, discretization_->vJBegin()) = discretization_->v(i, discretization_->vJBegin());
+
+            // discretization_->g(i, discretization_->vJBegin()) = 2 * discretization_->v(i, discretization_->vJBegin()) - discretization_->oldBoundaryValueBottom_[i];
+            // discretization_->oldBoundaryValueBottom_[i] = discretization_->v(i, discretization_->vJBegin());
         }
     }
     else
@@ -263,8 +269,11 @@ void Computation::applyBoundaryValues()
         for (int j = discretization_->uJBegin(); j < discretization_->uJEnd(); j++)
         {
             discretization_->u(discretization_->uIBegin(), j) = discretization_->u(discretization_->uIBegin() + 1, j);
-            discretization_->f(discretization_->uIBegin(), j) = 2 * discretization_->u(discretization_->uIBegin(), j) - discretization_->oldBoundaryValueLeft_[j];
-            discretization_->oldBoundaryValueLeft_[j] = discretization_->u(discretization_->uIBegin(), j);
+            discretization_->f(discretization_->uIBegin(), j) = discretization_->u(discretization_->uIBegin(), j);
+            
+            
+            // discretization_->f(discretization_->uIBegin(), j) = 2 * discretization_->u(discretization_->uIBegin(), j) - discretization_->oldBoundaryValueLeft_[j];
+            // discretization_->oldBoundaryValueLeft_[j] = discretization_->u(discretization_->uIBegin(), j);
         }
 
         // set v, g
@@ -299,8 +308,10 @@ void Computation::applyBoundaryValues()
         for (int j = discretization_->uJBegin(); j < discretization_->uJEnd(); j++)
         {
             discretization_->u(discretization_->uIEnd() - 1, j) = discretization_->u(discretization_->uIEnd() - 2, j);
-            discretization_->f(discretization_->uIEnd() - 1, j) = 2 * discretization_->u(discretization_->uIEnd() - 1, j) - discretization_->oldBoundaryValueRight_[j];
-            discretization_->oldBoundaryValueRight_[j] = discretization_->u(discretization_->uIEnd() - 1, j);
+            discretization_->f(discretization_->uIEnd() - 1, j) = discretization_->u(discretization_->uIEnd() - 1, j);
+            
+            // discretization_->f(discretization_->uIEnd() - 1, j) = 2 * discretization_->u(discretization_->uIEnd() - 1, j) - discretization_->oldBoundaryValueRight_[j];
+            // discretization_->oldBoundaryValueRight_[j] = discretization_->u(discretization_->uIEnd() - 1, j);
         }
 
         // set v, g

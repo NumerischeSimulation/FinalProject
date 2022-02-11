@@ -5,8 +5,8 @@
 # Problem description
 physicalSizeX = 3.0   # physical size of the domain
 physicalSizeY = 1.0
-endTime = 30.          # duration of the simulation
-re = 1000             # Reynolds number
+endTime = 10.          # duration of the simulation
+re = 500             # Reynolds number
 gX = 0.0              # external forces, set to (gX,gY) = (0,-9.81) to account for gravity
 gY = 0.0
 
@@ -17,16 +17,16 @@ dirichletBottomX = 0
 dirichletBottomY = 0
 dirichletTopX    = 0
 dirichletTopY    = 0
-dirichletLeftX   = 0   # inflow
+dirichletLeftX   = 1   # inflow
 dirichletLeftY   = 0  
-dirichletRightX  = -1
+dirichletRightX  = 0
 dirichletRightY  = 0
 
 # Outflow boundary conditions
 outflowBottom = false
 outflowTop    = false
-outflowLeft   = true
-outflowRight  = false
+outflowLeft   = false
+outflowRight  = true
 
 # Discretization parameters
 nCellsX = 60          # number of cells in x and y direction
@@ -41,4 +41,3 @@ pressureSolver = SOR  # which pressure solver to use, possible values: GaussSeid
 omega = 1.6           # overrelaxation factor, only for SOR solver
 epsilon = 1e-5        # tolerance for 2-norm of residual
 maximumNumberOfIterations = 1e3    # maximum number of iterations in the solver
-

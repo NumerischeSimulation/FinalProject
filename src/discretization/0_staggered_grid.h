@@ -121,10 +121,10 @@ public:
     int pJEnd() const;
 
     // - old boundary values - #badcode
-    std::vector<double> oldBoundaryValueTop_;
-    std::vector<double> oldBoundaryValueBottom_;
-    std::vector<double> oldBoundaryValueLeft_;
-    std::vector<double> oldBoundaryValueRight_;
+    // std::vector<double> oldBoundaryValueTop_;
+    // std::vector<double> oldBoundaryValueBottom_;
+    // std::vector<double> oldBoundaryValueLeft_;
+    // std::vector<double> oldBoundaryValueRight_;
 
 protected:
     const std::array<int, 2> nCells_;
