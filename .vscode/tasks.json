@@ -8,7 +8,7 @@
                 "install"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${fileDirname}/../build"
             },
             "problemMatcher": [
                 "$gcc"
@@ -28,7 +28,7 @@
                 ".."
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "${fileDirname}/../build"
             },
         }
     ],
