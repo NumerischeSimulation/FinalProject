@@ -27,4 +27,8 @@ mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make install
-./finalproject ../ini/${1}.txt
+./finalproject ../ini/${1}.txt > logs_${1}.txt &
+
+# show job number
+jobs
+# fg <job_number>
