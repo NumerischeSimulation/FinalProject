@@ -25,15 +25,15 @@ void Computation::initialize(int argc, char *argv[])
 
     if (settings_.pressureSolver == "SOR")
     {
-        pressureSolver_ = std::make_unique<SOR>(discretization_, settings_.epsilon, settings_.maximumNumberOfIterations, settings_.omega);
+        pressureSolver_ = std::make_unique<SOR>(discretization_, settings_.epsilon, settings_.maximumNumberOfIterations, settings_.omega, settings_.outflowBottom, settings_.outflowTop, settings_.outflowLeft, settings_.outflowRight);
     }
     else if (settings_.pressureSolver == "GaussSeidel")
     {
-        pressureSolver_ = std::make_unique<GaussSeidel>(discretization_, settings_.epsilon, settings_.maximumNumberOfIterations);
+        pressureSolver_ = std::make_unique<GaussSeidel>(discretization_, settings_.epsilon, settings_.maximumNumberOfIterations, settings_.outflowBottom, settings_.outflowTop, settings_.outflowLeft, settings_.outflowRight);
     }
     else if (settings_.pressureSolver == "CG")
     {
-        pressureSolver_ = std::make_unique<CGSolver>(discretization_, settings_.epsilon, settings_.maximumNumberOfIterations);
+        pressureSolver_ = std::make_unique<CGSolver>(discretization_, settings_.epsilon, settings_.maximumNumberOfIterations, settings_.outflowBottom, settings_.outflowTop, settings_.outflowLeft, settings_.outflowRight);
     }
     else
     {

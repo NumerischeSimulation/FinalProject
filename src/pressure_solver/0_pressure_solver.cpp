@@ -3,10 +3,14 @@
 
 #include <memory>
 
-PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, double epsilon, int maximumNumberOfIterations):
+PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, double epsilon, int maximumNumberOfIterations, bool outflowBottom, bool outflowTop, bool outflowLeft, bool outflowRight):
   discretization_(discretization),
   epsilon_(epsilon),
-  maximumNumberOfIterations_(maximumNumberOfIterations)
+  maximumNumberOfIterations_(maximumNumberOfIterations),
+  outflowBottom_(outflowBottom), 
+  outflowTop_(outflowTop),
+  outflowLeft_(outflowLeft),
+  outflowRight_(outflowRight)
 {
 }
 
@@ -91,7 +95,16 @@ PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, d
     // p_-1,j = p_0
     for ( int j = discretization_->pJBegin(); j < discretization_->pJEnd(); j++)
     {
-      discretization_->p(-1,j) =  discretization_->p(0,j);
+      if (outflowLeft_)
+      {
+        // p(boundary) = 0
+        discretization_->p(-1,j) =  - discretization_->p(0,j);
+      }
+      else
+      {
+        discretization_->p(-1,j) =  discretization_->p(0,j);
+      }
+      
     }
   }
 
@@ -101,7 +114,15 @@ PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, d
     // p_n+1,j = p_n,j
     for ( int j = discretization_->pJBegin(); j < discretization_->pJEnd(); j++)
     {
-      discretization_->p(n,j) =  discretization_->p(n-1 ,j);
+      if (outflowRight_)
+      {
+        // p(boundary) = 0
+        discretization_->p(n,j) =  - discretization_->p(n-1 ,j);
+      }
+      else
+      {
+        discretization_->p(n,j) =  discretization_->p(n-1 ,j);
+      }
     }
   }
 
@@ -111,7 +132,15 @@ PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, d
     // p_-1,j = p_0
     for ( int i = discretization_->pIBegin() +1; i < discretization_->pIEnd() -1; i++)
     {
-      discretization_->p(i, m) = discretization_->p(i, m-1);
+      if (outflowTop_)
+      {
+        // p(boundary) = 0
+        discretization_->p(i, m) = - discretization_->p(i, m-1);
+      }
+      else
+      {
+        discretization_->p(i, m) = discretization_->p(i, m-1);
+      }
     }
   }
 
@@ -120,7 +149,15 @@ PressureSolver::PressureSolver(std::shared_ptr<Discretization> discretization, d
     // p_-1,j = p_0
     for ( int i = discretization_->pIBegin() +1; i < discretization_->pIEnd() -1; i++)
     {
-      discretization_->p(i, -1)  = discretization_->p(i, 0);
+      if (outflowBottom_)
+      {
+        // p(boundary) = 0
+        discretization_->p(i, -1)  = - discretization_->p(i, 0);
+      }
+      else
+      {
+        discretization_->p(i, -1)  = discretization_->p(i, 0);
+      }
     }
   }
 

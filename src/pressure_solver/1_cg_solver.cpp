@@ -1,7 +1,7 @@
 #include "1_cg_solver.h"
 
-CGSolver::CGSolver(std::shared_ptr<Discretization> discretization, double epsilon, int maximumNumberOfIterations) :
-  PressureSolver(discretization, epsilon, maximumNumberOfIterations),
+CGSolver::CGSolver(std::shared_ptr<Discretization> discretization, double epsilon, int maximumNumberOfIterations, bool outflowBottom, bool outflowTop, bool outflowLeft, bool outflowRight) :
+  PressureSolver(discretization, epsilon, maximumNumberOfIterations, outflowBottom, outflowTop, outflowLeft, outflowRight),
   res({discretization_->nCells()[0],discretization_->nCells()[1]}, 
       {discretization_->meshWidth()[0]/2., discretization_->meshWidth()[0]/2}, 
       discretization_->meshWidth())

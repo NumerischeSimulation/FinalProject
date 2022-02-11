@@ -1,8 +1,8 @@
 #include "1_sor.h"
 #include <math.h> 
 
-SOR::SOR(std::shared_ptr<Discretization> discretization, double epsilon, int maximumNumberOfIterations, double omega) :
-    PressureSolver(discretization, epsilon, maximumNumberOfIterations),
+SOR::SOR(std::shared_ptr<Discretization> discretization, double epsilon, int maximumNumberOfIterations, double omega, bool outflowBottom, bool outflowTop, bool outflowLeft, bool outflowRight) :
+    PressureSolver(discretization, epsilon, maximumNumberOfIterations, outflowBottom, outflowTop, outflowLeft, outflowRight),
     omega_(omega)
 {
 }

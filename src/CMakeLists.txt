@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME}
    pressure_solver/0_pressure_solver.cpp
    pressure_solver/1_gauss_seidel.cpp
    pressure_solver/1_sor.cpp
+   pressure_solver/1_cg_solver.cpp
    
    discretization/0_staggered_grid.cpp
    discretization/1_discretization.cpp
