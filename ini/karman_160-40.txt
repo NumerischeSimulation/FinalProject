@@ -4,13 +4,13 @@
 # Problem description
 physicalSizeX = 4.0   # physical size of the domain
 physicalSizeY = 1.0
-complexGeometryPath = ../ini/channelstep_100-20.csv # black-white description of the geometry
+complexGeometryPath = ../ini/karman_160-40.csv # black-white description of the geometry
 endTime = 50.          # duration of the simulation
 re = 150               # Reynolds number
 gX = 0.0               # external forces, set to (gX,gY) = (0,-9.81) to account for gravity
 gY = 0.0
 
-underrelaxationVelocity = 0.2
+underrelaxationVelocity = 0.65
 
 # Dirichlet boundary conditions
 dirichletBottomX = 0
