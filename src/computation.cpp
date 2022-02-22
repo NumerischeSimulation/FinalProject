@@ -78,18 +78,9 @@ void Computation::runSimulation()
         std::cout << "Applied obstacle boundary values for u/v and F/G." << std::endl;
 
         // step 2: compute time step width
-        computeTimeStepWidth();
+        computeTimeStepWidth(currentTime);
 
         std::cout << "Computed time step width: " << dt_ << std::endl;
-
-        // set the dt such that the simulation stops exactly on endTime
-        if (currentTime + dt_ > settings_.endTime)
-        {
-            dt_ = settings_.endTime - currentTime;
-
-            std::cout << std::endl;
-            std::cout << "Final time step!" << std::endl;
-        }
         currentTime += dt_;
 
         std::cout << "+++++++++++++++++++++++" << std::endl;
@@ -117,14 +108,18 @@ void Computation::runSimulation()
         std::cout << "Computed velocities" << std::endl;
 
         // step 9: write output
-        outputWriterParaview_->writeFile(currentTime);
-        outputWriterText_->writeFile(currentTime);
+        if (std::floor(currentTime) == currentTime || currentTime == settings_.endTime) // TODO
+        {
+            //std::cout << "Writing output..." << std::endl;
+            outputWriterParaviewParallel_->writeFile(currentTime);
+            outputWriterTextParallel_->writeFile(currentTime);
+        }
     }
 
     std::cout << "Simulation finished!!" << std::endl;
 }
 
-void Computation::computeTimeStepWidth()
+void Computation::computeTimeStepWidth(double currentTime)
 {
     double boundary_diffusion = 0.;
 
@@ -180,6 +175,21 @@ void Computation::computeTimeStepWidth()
 
     // security factor
     dt_ = std::min(min_dt * settings_.tau, settings_.maximumDt);
+
+    // if necessary adapt so that every full second is reached
+    if (std::floor(currentTime + dt_*1.25) == std::floor(currentTime) + 1) // increase dt_ to avoid numerically instable small time steps
+    {
+        //std::cout << "Adapting time step to reach full second..." << std::endl;
+        dt_ = (double)(std::floor(currentTime) + 1) - currentTime; // currentTime hits exactly next second
+    }
+    // or if necessary set currentTime + dt_ to endTime
+    if (currentTime + dt_ > settings_.endTime)
+    {
+        dt_ = settings_.endTime - currentTime;
+
+        std::cout << std::endl;
+        std::cout << "Final time step!" << std::endl;
+    }
 }
 
 void Computation::applyBoundaryValues()

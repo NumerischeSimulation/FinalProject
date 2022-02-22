@@ -30,7 +30,7 @@ public:
 
 private:
     //! compute the time step width dt from maximum velocities 
-    void computeTimeStepWidth();
+    void computeTimeStepWidth(double currentTime);
 
     //!  set boundary values of u , v, F, G to correct values
     void applyBoundaryValues();
