@@ -1,15 +1,4 @@
-	
-
 #include "output_writer/write_paraview_output.h"
-
-#include <vtkSmartPointer.h>
-#include <vtkImageData.h>
-#include <vtkXMLImageDataWriter.h>
-#include <vtkDoubleArray.h>
-#include <vtkPointData.h>
-
-#include <cstdlib>
-#include <iostream>
 
 void writeParaviewOutput(int fileNo, std::string uID)
 {
