@@ -20,8 +20,7 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make install
 
 # iterate through list of scenarios
-declare -a StringArray=( "tesla_140-84_left_lowRe_underRelax" "tesla_140-84_left_lowRe_noRelax" "tesla_140-84_right_lowRe_underRelax" "tesla_140-84_right_lowRe_noRelax" )
-# "tesla_140-84_left_highRe_noRelax" "tesla_140-84_left_highRe_underRelax" "tesla_140-84_right_highRe_underRelax" "tesla_140-84_right_highRe_noRelax"
+declare -a StringArray=( "tesla_140-84_left_lowRe_underRelax" "tesla_140-84_left_lowRe_noRelax" "tesla_140-84_right_lowRe_underRelax" "tesla_140-84_right_lowRe_noRelax" "tesla_140-84_left_highRe_noRelax" "tesla_140-84_left_highRe_underRelax" "tesla_140-84_right_highRe_underRelax" "tesla_140-84_right_highRe_noRelax")
 
 for val in ${StringArray[@]}; do
    # request resources

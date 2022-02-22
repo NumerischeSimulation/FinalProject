@@ -107,12 +107,12 @@ void Computation::runSimulation()
 
         std::cout << "Computed velocities" << std::endl;
 
-        // step 9: write output
-        if (std::floor(currentTime) == currentTime || currentTime == settings_.endTime) // TODO
+        // step 9: write output every tenth of a second
+        if (std::floor(currentTime*10.) == (currentTime*10.) || currentTime == settings_.endTime) // TODO
         {
-            //std::cout << "Writing output..." << std::endl;
-            outputWriterParaviewParallel_->writeFile(currentTime);
-            outputWriterTextParallel_->writeFile(currentTime);
+            std::cout << "Writing output..." << std::endl;
+            outputWriterParaview_->writeFile(currentTime);
+            //outputWriterText_->writeFile(currentTime);
         }
     }
 
@@ -176,11 +176,11 @@ void Computation::computeTimeStepWidth(double currentTime)
     // security factor
     dt_ = std::min(min_dt * settings_.tau, settings_.maximumDt);
 
-    // if necessary adapt so that every full second is reached
-    if (std::floor(currentTime + dt_*1.25) == std::floor(currentTime) + 1) // increase dt_ to avoid numerically instable small time steps
+    // if necessary adapt so that every full tenth of a second is reached
+    if (std::floor((currentTime + dt_*1.25)*10.) == (std::floor(currentTime*10.) + 1)) // increase dt_ to avoid numerically instable small time steps
     {
         //std::cout << "Adapting time step to reach full second..." << std::endl;
-        dt_ = (double)(std::floor(currentTime) + 1) - currentTime; // currentTime hits exactly next second
+        dt_ = (double)(((std::floor(currentTime*10) + 1) - (currentTime*10))/10.); // currentTime hits exactly next second
     }
     // or if necessary set currentTime + dt_ to endTime
     if (currentTime + dt_ > settings_.endTime)
