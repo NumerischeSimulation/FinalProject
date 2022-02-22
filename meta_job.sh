@@ -13,8 +13,8 @@ module load vtk/9.0.1
 module load cmake/3.18.2
 
 # compile code
-rm -rf build/
-mkdir build
+# rm -rf build/
+mkdir -p build
 cd build
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make install
