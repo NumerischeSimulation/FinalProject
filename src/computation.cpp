@@ -45,8 +45,8 @@ void Computation::initialize(int argc, char *argv[])
     dt_ = 0.;
 
     // initialize output writer
-    outputWriterParaview_ = std::make_unique<OutputWriterParaview>(discretization_);
-    outputWriterText_ = std::make_unique<OutputWriterText>(discretization_);
+    outputWriterParaview_ = std::make_unique<OutputWriterParaview>(discretization_, settings_.uID);
+    outputWriterText_ = std::make_unique<OutputWriterText>(discretization_, settings_.uID);
 
 
     // set obstactle flags

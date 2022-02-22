@@ -10,7 +10,7 @@ void OutputWriterText::writeFile(double currentTime)
 {
   // Assemble the filename
   std::stringstream fileName;
-  fileName << "out/output_" << std::setw(4) << std::setfill('0') << fileNo_ << ".txt";
+  fileName << "out_" << uID_ << "/output_" << std::setw(4) << std::setfill('0') << fileNo_ << ".txt";
   
   // increment file no.
   fileNo_++;
@@ -342,7 +342,7 @@ void OutputWriterText::writePressureFile()
 
   // Assemble the filename
   std::stringstream fileName;
-  fileName << "out/pressure_" << std::setw(4) << std::setfill('0') << pressurefileNo++ << ".txt";
+  fileName << "out_" << uID_ << "/pressure_" << std::setw(4) << std::setfill('0') << pressurefileNo++ << ".txt";
   
   // open file
   std::ofstream file(fileName.str().c_str());

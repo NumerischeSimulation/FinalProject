@@ -11,19 +11,21 @@
 #include <cstdlib>
 #include <iostream>
 
-void writeParaviewOutput(int fileNo)
+void writeParaviewOutput(int fileNo, std::string uID)
 {
   // create "out" subdirectory if it does not yet exist
-  int returnValue = system("mkdir -p out");
+  std::string command = "mkdir -p ";
+  std::string folder_name = "out_"  + uID;
+  int returnValue = system((command + folder_name).c_str());
   if (returnValue != 0)
-    std::cout << "Could not create subdirectory \"out\"." << std::endl;
+    std::cout << "Could not create subdirectory \"out_"  << uID << "\"." << std::endl;
 
   // Create a vtkWriter
   vtkSmartPointer<vtkXMLImageDataWriter> vtkWriter = vtkSmartPointer<vtkXMLImageDataWriter>::New();
 
   // Assemble the filename
   std::stringstream fileName;
-  fileName << "out/output_" << std::setw(4) << setfill('0') << fileNo << "." << vtkWriter->GetDefaultFileExtension();
+  fileName << "out_" << uID << "/output_" << std::setw(4) << setfill('0') << fileNo << "." << vtkWriter->GetDefaultFileExtension();
 
   std::cout << "Write file \"" << fileName.str() << "\"." << std::endl;
 

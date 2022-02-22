@@ -15,7 +15,8 @@ void Settings::printSettings()
     << "  outflow: bottom: " << outflowBottom << ", top: "  << outflowTop << ", left: "  << outflowLeft << ", right: "  << outflowRight << std::endl
     << "  useDonorCell: " << std::boolalpha << useDonorCell << ", alpha: " << alpha << std::endl
     << " underrelaxation constant: " << underrelaxationVelocity << std::endl
-    << "  pressureSolver: " << pressureSolver << ", omega: " << omega << ", epsilon: " << epsilon << ", maximumNumberOfIterations: " << maximumNumberOfIterations << std::endl;
+    << "  pressureSolver: " << pressureSolver << ", omega: " << omega << ", epsilon: " << epsilon << ", maximumNumberOfIterations: " << maximumNumberOfIterations << std::endl
+    << " unique folder name: " << uID << std::endl;
 }
 
 void Settings::loadFromFile(std::string filename)
@@ -23,6 +24,7 @@ void Settings::loadFromFile(std::string filename)
   // initialize
   complexGeometryPath = "None";
   underrelaxationVelocity = 1.;
+  uID = "";
 
   // open file
   std::ifstream file(filename.c_str(), std::ios::in);
@@ -181,6 +183,9 @@ void Settings::loadFromFile(std::string filename)
     }
     else if (parameterName == "maximumNumberOfIterations"){
       maximumNumberOfIterations = int(atof(valueString.c_str())); // int, but else the scientific notation is not understood
+    }
+    else if (parameterName == "uID"){
+      uID = valueString; // std:string
     }
     else {
       std::cout << "The parameter " << parameterName << " in this line " << lineNo << " could not be found in " << filename << "\"." << std::endl;

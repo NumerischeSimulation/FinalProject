@@ -1,7 +1,7 @@
 #include "output_writer/output_writer_paraview.h"
 
-OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discretization) :
-   OutputWriter(discretization)
+OutputWriterParaview::OutputWriterParaview(std::shared_ptr<Discretization> discretization, std::string uID) :
+   OutputWriter(discretization, uID)
 {
   // Create a vtkWriter_
   vtkWriter_ = vtkSmartPointer<vtkXMLImageDataWriter>::New();
@@ -11,7 +11,7 @@ void OutputWriterParaview::writeFile(double currentTime)
 {
   // Assemble the filename
   std::stringstream fileName;
-  fileName << "out/output_" << std::setw(4) << setfill('0') << fileNo_ << "." << vtkWriter_->GetDefaultFileExtension();
+  fileName << "out_" << uID_ << "/output_" << std::setw(4) << setfill('0') << fileNo_ << "." << vtkWriter_->GetDefaultFileExtension();
   
   // increment file no.
   fileNo_++;
